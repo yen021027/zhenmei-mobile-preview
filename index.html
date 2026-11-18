@@ -51,7 +51,7 @@ if(i>=0&&currentRail){
 app.className=i>=0?'chapter':!labels[page]?'welcome':'inner';
 const back=i>=0?'home':page==='story'?'about':page==='studio'?'craft':page==='collection'?'projects':'collection';
 const bar='<header class="bar">'+link(back,'返回')+'<span>振美建設 ｜ '+(labels[page]||'')+'</span>'+link('home','首頁')+'</header>';
-if(!labels[page])app.innerHTML='<section class="cover"><small>Reliable and devoted, sincere and relevant, to build the best.</small>'+photo('cover','工地人物油畫','painting')+photo('signature','振美建設｜居采公司','signature')+link('projects','進入振美','enter')+'<button id="pause">暫停 3 秒後自動進入</button></section>';
+if(!labels[page])app.innerHTML='<section class="cover"><small>Reliable and devoted, sincere and relevant, to build the best.</small>'+photo('cover','工地人物油畫','painting')+photo('signature','振美建設｜居采公司','signature')+link('projects','進入振美','enter')+'</section>';
 else if(i>=0){
  const rail=document.createElement('div');
  rail.className='chapter-rail';
@@ -82,7 +82,7 @@ else if(page==='collection'){app.innerHTML=bar+'<article>'+link('progress',photo
 else if(page==='gallery')app.innerHTML=bar+photo('gallery','歷年作品手繪建築與年代紀錄','gallery')+'<article><h1>歷年作品</h1>'+galleryCases.map(galleryFold).join('')+'</article>';
 else app.innerHTML=bar+'<article>'+photo('progress','PROGRESS 建築細部')+'<h1>沐居采</h1><p>最新建案資訊請見振美官網。</p>'+officialLink('new-project/','查看振美新案資訊')+'</article>';
 app.insertAdjacentHTML('beforeend',contacts);
-if(!labels[page]){entryTimer=setTimeout(()=>location.replace('#projects'),3000);const pause=document.getElementById('pause');pause.onclick=()=>{clearTimeout(entryTimer);pause.textContent='已暫停自動進入';pause.disabled=true};app.querySelector('footer').onfocusin=()=>pause.click()}
+if(!labels[page]){entryTimer=setTimeout(()=>location.replace('#projects'),3000);app.querySelector('footer').onfocusin=()=>clearTimeout(entryTimer)}
 document.title=(labels[page]||'首頁')+'｜振美建設';window.scrollTo(0,0);
 }
 function shift(n){const i=chapters.indexOf(location.hash.slice(1));if(i>=0&&chapters[i+n])location.hash=chapters[i+n]}
