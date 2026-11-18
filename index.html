@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-Hant"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>振美建設｜居采公司</title><style>
+<!doctype html><html lang="zh-Hant"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><link rel="icon" type="image/png" href="favicon.png"><title>振美建設｜居采公司</title><style>
 *{box-sizing:border-box}html{background:#211f1d}body{margin:0;color:#39352f;font:16px Georgia,"Noto Serif TC","Microsoft JhengHei",serif}main{background:#fdfaf3;max-width:480px;min-height:100svh;margin:auto}a{color:inherit;text-decoration:none}a:focus-visible{outline:3px solid #aa8045;outline-offset:2px}img{display:block;max-width:100%}.cover{background:#050505;color:#c7ae82;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px 10%}.cover small{font-style:italic;align-self:flex-start;font-size:12px;margin-bottom:12px}.painting{height:54svh;width:100%;object-fit:cover;border:1px solid #927749}.signature{width:165px;height:109px;object-fit:contain}.enter{background:#c3a574;color:#17130f;width:100%;padding:15px;text-align:center;letter-spacing:.15em}.bar,nav{display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid #d9cebb;min-height:48px}.bar a,nav a{display:inline-grid;place-items:center;min-height:46px}.bar span{font-size:12px;color:#665b4b}.plate{width:100%;max-height:67svh;object-fit:contain}.caption{text-align:center;font-size:18px;letter-spacing:.13em;margin:18px 12px}.links,article{padding:0 22px 16px}.action{display:block;text-align:center;border:1px solid #94805f;padding:12px}.tabs{position:sticky;bottom:0;background:#fcf9f1;border-top:1px solid #d9cebb;gap:4px;padding:0 7px}.tabs a{font:13px sans-serif;flex:1}.tabs [aria-current]{border-bottom:3px solid #9b7744;font-weight:bold}.hint{text-align:center;font-size:12px;color:#706554;margin:10px}.tile{display:block;margin:18px 0}.tile img,article>img{width:100%}article{padding-top:12px}h1{font-weight:400;font-size:24px}p{line-height:1.85}.gallery{width:100%}@media(min-width:500px){main{box-shadow:0 0 50px #0004}}@media(max-height:620px){.signature{height:74px}}
 details{border-top:1px solid #ccbea6;padding:4px 0}summary{cursor:pointer;padding:16px 4px;font-size:19px}details p{margin:2px 4px 15px}details a,article p a{text-decoration:underline;text-underline-offset:4px}.contacts{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;padding:14px 6px;background:#eee8dd}.contacts a{min-height:44px;display:grid;place-items:center;padding:0 8px;font:13px sans-serif}.chapter-entry{display:block}.chapter-entry:focus-visible{outline-offset:-4px}.collection-name{display:block;padding:10px 0}.cover button{margin-top:8px;min-height:44px;background:transparent;color:#c7ae82;border:0;cursor:pointer}details img{margin-bottom:12px}.tabs{z-index:2}
 :root{--gutter:clamp(20px,5vw,80px)}main{position:relative;max-width:none;box-shadow:none;background:#faf7ef}
@@ -45,9 +45,21 @@ const sections={
  ['工法',para('振美官網在材料與合作廠商名錄中列出東和林中空樓板與 YKK AP 氣密窗。')+archiveImage('suppliers0','東和林中空樓板資料')+archiveImage('suppliers1','YKK AP 氣密窗資料')],
  ['活動',para('2021 年 2 月｜新春花藝 DIY 課程')+archiveImage('events0','新春花藝課程紀錄')+para('2021 年 1 至 6 月｜蔡士弘個展 × 漫光蒙梭')+archiveImage('events1','蔡士弘個展作品《幻術之吻》')+para('2020 年 12 月｜手做聖誕小樹 DIY 課程')+para('2020 年 11 月｜麓園動土典禮')+para('2020 年 10 月｜中秋清酒品飲會')]]
 };
-let entryTimer;
+let entryTimer, projectImage, galleryState, renderedPage;
+history.scrollRestoration='manual';
+function rememberGallery(){
+ if(renderedPage!=='gallery')return;
+ const rows=[...app.querySelectorAll('details')];
+ const opened=rows.map(row=>row.open);
+ const y=window.scrollY;
+ galleryState={opened,y};
+}
+window.addEventListener('scroll',()=>{if(renderedPage==='gallery'&&location.hash==='#gallery'&&window.scrollY>0)rememberGallery()},{passive:true});
+app.addEventListener('toggle',e=>{if(renderedPage==='gallery'&&e.target.matches('details')&&location.hash==='#gallery')rememberGallery()},true);
 function render(){clearTimeout(entryTimer);
 const page=location.hash.slice(1)||'home',i=chapters.indexOf(page);
+if(renderedPage==='gallery'&&page!=='gallery'&&(!galleryState||window.scrollY>0))rememberGallery();
+renderedPage=page;
 const currentRail=app.querySelector('.chapter-rail');
 if(i>=0&&currentRail){
  currentRail.scrollTo({left:i*currentRail.clientWidth,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
@@ -67,6 +79,11 @@ else if(i>=0){
  }).join('');
  const tabs=chapters.map(key=>link(key,labels[key])).join('');
  app.innerHTML=bar+'<div class="chapter-stage"><div class="switcher"><p class="hint">左右滑動切換章節</p><nav class="tabs" aria-label="主要章節">'+tabs+'</nav></div></div>';
+ if(projectImage&&projectImage.complete&&projectImage.naturalWidth){
+   const plate=rail.querySelectorAll('.plate')[1];
+   projectImage.className=plate.className;projectImage.alt=plate.alt;
+   plate.replaceWith(projectImage);
+ }
  app.querySelector('.chapter-stage').prepend(rail);
  rail.scrollLeft=i*rail.clientWidth;
  markChapter(i);
@@ -98,10 +115,17 @@ else if(page==='gallery')app.innerHTML=bar+photo('gallery','歷年作品手繪�
 else app.innerHTML=bar+'<article>'+photo('progress','PROGRESS 建築細部')+'<h1>沐居采</h1><p>振美的新案頁面目前標示為 Coming Soon，尚未列出沐居采的工程進度。</p>'+archiveImage('new0','振美新案頁的 Coming Soon 預告')+'</article>';
 app.insertAdjacentHTML('beforeend',contacts);
 if(!labels[page]){const cover=app.querySelector('.painting');
-const warmChapters=()=>{if(!cover.isConnected)return;for(const key of ['projects','about','craft']){const image=new Image();image.decoding='async';image.src=photos[key];image.decode().catch(()=>{})}};
-if(cover.complete)warmChapters();else cover.addEventListener('load',warmChapters,{once:true});
-entryTimer=setTimeout(()=>location.replace('#projects'),3000);app.querySelector('footer').onfocusin=()=>clearTimeout(entryTimer)}
-document.title=(labels[page]||'首頁')+'｜振美建設';window.scrollTo(0,0);
+projectImage=new Image();projectImage.fetchPriority='high';projectImage.src=photos.projects;
+const ready=projectImage.decode().then(()=>true,()=>false);
+ready.then(ok=>{if(ok&&cover.isConnected){for(const key of ['about','craft']){const image=new Image();image.fetchPriority='low';image.src=photos[key]}}});
+let allowAuto=true;
+entryTimer=setTimeout(async()=>{if(await ready&&cover.isConnected&&allowAuto)location.replace('#projects')},3000);
+app.querySelector('footer').onfocusin=()=>{allowAuto=false;clearTimeout(entryTimer)}}
+document.title=(labels[page]||'首頁')+'｜振美建設';if(page==='gallery'&&galleryState){
+ const saved=galleryState;
+ app.querySelectorAll('details').forEach((row,index)=>row.open=!!saved.opened[index]);
+ window.scrollTo(0,saved.y);
+}else window.scrollTo(0,0);
 }
 function shift(n){const i=chapters.indexOf(location.hash.slice(1));if(i>=0&&chapters[i+n])location.hash=chapters[i+n]}
 function markChapter(index){
