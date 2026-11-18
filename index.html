@@ -14,7 +14,14 @@ details{border-top:1px solid #ccbea6;padding:4px 0}summary{cursor:pointer;paddin
 details{padding:8px 0}details summary{border-radius:20px;padding:14px 12px;background:#f0eadf}details img{width:100vw;max-width:none;margin-left:calc(-1 * var(--gutter))}details[open] p{margin:16px 6px}.contacts{padding:18px 8px;gap:6px}.contacts a{border:1px solid #ad9f89;border-radius:999px;padding:0 12px}.gallery{width:100%;height:auto}
 @media(min-width:800px){.plate,.painting{object-position:center 42%}.inner article>img,.tile img{max-height:72svh;object-fit:cover}}
 @media(max-height:580px){.scene{min-height:570px}.cover{min-height:460px}}
-.chapter-stage{position:relative}.chapter-rail{display:flex;width:100%;overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:none}.chapter-rail::-webkit-scrollbar{display:none}.chapter-rail .scene{flex:0 0 100%;min-width:0;scroll-snap-align:start;scroll-snap-stop:always;padding-bottom:calc(118px + env(safe-area-inset-bottom))}.chapter-stage>.switcher{position:absolute;z-index:2;bottom:max(20px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(calc(100% - 40px),420px);margin:0}.archive-image{display:block;height:auto;background:#faf7ef}article>img.archive-image{width:min(100%,480px);margin:16px auto;object-fit:contain}</style><main id="app"></main><script>
+.chapter-stage{position:relative}.chapter-rail{display:flex;width:100%;overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:none}.chapter-rail::-webkit-scrollbar{display:none}.chapter-rail .scene{flex:0 0 100%;min-width:0;scroll-snap-align:start;scroll-snap-stop:always;padding-bottom:calc(118px + env(safe-area-inset-bottom))}.chapter-stage>.switcher{position:absolute;z-index:2;bottom:max(20px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(calc(100% - 40px),420px);margin:0}.archive-image{display:block;height:auto;background:#faf7ef}article>img.archive-image{width:min(100%,480px);margin:16px auto;object-fit:contain}@media(prefers-reduced-motion:no-preference){
+ .soft-entry>.section-photo,.soft-entry article>.tile:first-child{animation:chapter-photo-in 420ms ease-out both}
+ .soft-entry article>h1,.soft-entry article>details,.soft-entry article>.tile:not(:first-child){animation:chapter-copy-in 380ms cubic-bezier(.2,.65,.3,1) 35ms both}
+ .soft-entry article>details:nth-of-type(2){animation-delay:60ms}
+ .soft-entry article>details:nth-of-type(3){animation-delay:85ms}
+ @keyframes chapter-photo-in{from{opacity:.74}to{opacity:1}}
+ @keyframes chapter-copy-in{from{opacity:.45;transform:translateY(5px)}to{opacity:1;transform:none}}
+}</style><main id="app"></main><script>
 const photos={"about": "photos/about.jpg", "cover": "photos/cover.jpg", "craft": "photos/craft.jpg", "gallery": "photos/gallery.jpg", "gallerytile": "photos/gallerytile.jpg", "progress": "photos/progress.jpg", "projects": "photos/projects.jpg", "signature": "photos/signature.jpg"};
 const chapters=['about','projects','craft'];
 const labels={about:'關於振美',projects:'建築作品',craft:'建築工藝',collection:'作品導覽',progress:'工程進度',gallery:'歷年作品'};
@@ -59,6 +66,10 @@ app.addEventListener('toggle',e=>{if(renderedPage==='gallery'&&e.target.matches(
 function render(){clearTimeout(entryTimer);
 const page=location.hash.slice(1)||'home',i=chapters.indexOf(page);
 if(renderedPage==='gallery'&&page!=='gallery'&&(!galleryState||window.scrollY>0))rememberGallery();
+const enterChapter=(renderedPage==='about'&&page==='story')||
+ (renderedPage==='projects'&&page==='collection')||
+ (renderedPage==='craft'&&page==='studio')||
+ (app.classList.contains('chapter')&&['story','collection','studio'].includes(page));
 renderedPage=page;
 const currentRail=app.querySelector('.chapter-rail');
 if(i>=0&&currentRail){
@@ -114,6 +125,7 @@ else if(page==='collection'){app.innerHTML=bar+'<article>'+link('progress',photo
 else if(page==='gallery')app.innerHTML=bar+photo('gallery','歷年作品手繪建築與年代紀錄','gallery')+'<article><h1>歷年作品</h1>'+galleryCases.map(galleryFold).join('')+'</article>';
 else app.innerHTML=bar+'<article>'+photo('progress','PROGRESS 建築細部')+'<h1>沐居采</h1><p>振美的新案頁面目前標示為 Coming Soon，尚未列出沐居采的工程進度。</p>'+archiveImage('new0','振美新案頁的 Coming Soon 預告')+'</article>';
 app.insertAdjacentHTML('beforeend',contacts);
+app.classList.toggle('soft-entry',enterChapter);
 if(!labels[page]){const cover=app.querySelector('.painting');
 projectImage=new Image();projectImage.fetchPriority='high';projectImage.src=photos.projects;
 const ready=projectImage.decode().then(()=>true,()=>false);
