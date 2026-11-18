@@ -22,7 +22,7 @@ details{padding:8px 0}details summary{border-radius:20px;padding:14px 12px;backg
  @keyframes chapter-photo-in{from{opacity:.74}to{opacity:1}}
  @keyframes chapter-copy-in{from{opacity:.45;transform:translateY(5px)}to{opacity:1;transform:none}}
 }.entry-photo-bridge{position:fixed;object-fit:cover;pointer-events:none;z-index:5;max-width:none}.tile img{height:auto}
-@media(prefers-reduced-motion:no-preference){.soft-entry article>h1,.soft-entry article>details,.soft-entry article>.tile:not(:first-child){animation:entry-reading-in 540ms cubic-bezier(.2,.65,.3,1) 180ms both}@keyframes entry-reading-in{from{opacity:.2;transform:translateY(13px)}to{opacity:1;transform:none}}}</style><main id="app"></main><script>
+@media(prefers-reduced-motion:no-preference){.soft-entry article>h1,.soft-entry article>details,.soft-entry article>.tile:not(:first-child){animation:entry-reading-in 540ms cubic-bezier(.2,.65,.3,1) 180ms both}@keyframes entry-reading-in{from{opacity:.2;transform:translateY(13px)}to{opacity:1;transform:none}}}@media(prefers-reduced-motion:no-preference){.returning .scene:not([inert]) .story-title,.returning .switcher{animation:return-labels 500ms ease-out 280ms both}@keyframes return-labels{from{opacity:.25}to{opacity:1}}}.opening-cover:after{content:"";position:absolute;inset:0;background:#faf7ef;pointer-events:none;z-index:1}.opening-cover>.switcher{visibility:hidden}</style><main id="app"></main><script>
 const photos={"about": "photos/about.jpg", "cover": "photos/cover.jpg", "craft": "photos/craft.jpg", "gallery": "photos/gallery.jpg", "gallerytile": "photos/gallerytile.jpg", "progress": "photos/progress.jpg", "projects": "photos/projects.jpg", "signature": "photos/signature.jpg"};
 const chapters=['about','projects','craft'];
 const labels={about:'關於振美',projects:'建築作品',craft:'建築工藝',collection:'作品導覽',progress:'工程進度',gallery:'歷年作品'};
@@ -72,7 +72,10 @@ const enterChapter=(renderedPage==='about'&&page==='story')||
  (renderedPage==='craft'&&page==='studio')||
  (app.classList.contains('chapter')&&['story','collection','studio'].includes(page));
 document.querySelector('.entry-photo-bridge')?.remove();
-const source=enterChapter ? app.querySelector('.scene:not([inert]) .plate') : null;
+const returnChapter=i>=0&&['story','collection','studio'][i]===renderedPage;
+const detailPhoto='.section-photo,.tile img';
+const coverPhoto='.scene:not([inert]) .plate';
+const source=enterChapter?app.querySelector(coverPhoto):returnChapter?app.querySelector(detailPhoto):null;
 const origin=source?.getBoundingClientRect();
 const bridge=source?.complete && source.naturalWidth ? source.cloneNode(false) : null;
 renderedPage=page;
@@ -143,19 +146,23 @@ document.title=(labels[page]||'首頁')+'｜振美建設';if(page==='gallery'&&g
  app.querySelectorAll('details').forEach((row,index)=>row.open=!!saved.opened[index]);
  window.scrollTo(0,saved.y);
 }else window.scrollTo(0,0);
-if(bridge)enterWithPhoto(bridge,origin);
+if(bridge)transitionPhoto(bridge,origin,app.querySelector(returnChapter?coverPhoto:detailPhoto),returnChapter);
 }
-function enterWithPhoto(bridge,origin){
- const target=app.querySelector('.section-photo,.tile img');
+function transitionPhoto(bridge,origin,target,returning){
  if(!target)return;
  const bounds=target.getBoundingClientRect();
  bridge.className='entry-photo-bridge';
  bridge.alt='';
  Object.assign(bridge.style,{top:origin.top+'px',left:origin.left+'px',width:origin.width+'px',height:origin.height+'px'});
  document.body.append(bridge);
+ if(returning){
+   bridge.style.zIndex=1;
+   const stage=app.querySelector('.chapter-stage');
+   stage.classList.add('returning','opening-cover');
+ }
  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
  const motion=bridge.animate([{top:origin.top+'px',height:origin.height+'px'},{top:bounds.top+'px',height:bounds.height+'px'}],{duration:reduced?0:660,easing:'cubic-bezier(.32,0,.16,1)',fill:'forwards'});
- const release=()=>{if(!bridge.isConnected)return;const fade=bridge.animate([{opacity:1},{opacity:0}],{duration:220,fill:'forwards'});fade.finished.then(()=>bridge.remove(),()=>bridge.remove())};
+ const release=()=>{if(!bridge.isConnected)return;if(returning)app.querySelector('.chapter-stage')?.classList.remove('opening-cover');const fade=bridge.animate([{opacity:1},{opacity:0}],{duration:220,fill:'forwards'});fade.finished.then(()=>bridge.remove(),()=>bridge.remove())};
  Promise.all([motion.finished,target.decode()]).then(release,release);
 }
 function shift(n){const i=chapters.indexOf(location.hash.slice(1));if(i>=0&&chapters[i+n])location.hash=chapters[i+n]}
