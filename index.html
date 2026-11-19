@@ -29,7 +29,7 @@ main{padding-bottom:var(--contact-height)}
 .contacts a{font-size:12px;padding:0 clamp(7px,2vw,16px);white-space:nowrap}
 .chapter-rail .scene,.cover{min-height:calc(100svh - var(--contact-height))}
 @media(max-height:580px){.chapter-rail .scene{min-height:max(510px,calc(100svh - var(--contact-height)))}.cover{min-height:max(405px,calc(100svh - var(--contact-height)))}}
-</style><main id="app"></main><script>
+.cover.departing-cover{position:fixed;z-index:6;min-height:0;pointer-events:none;margin:0}</style><main id="app"></main><script>
 const photos={"about": "photos/about.jpg", "cover": "photos/cover.jpg", "craft": "photos/craft.jpg", "gallery": "photos/gallery.jpg", "gallerytile": "photos/gallerytile.jpg", "progress": "photos/progress.jpg", "projects": "photos/projects.jpg", "signature": "photos/signature.jpg"};
 const chapters=['about','projects','craft'];
 const labels={about:'關於振美',projects:'建築作品',craft:'建築工藝',collection:'作品導覽',progress:'工程進度',gallery:'歷年作品'};
@@ -77,6 +77,9 @@ function chapterContent(page){
 }
 function render(){clearTimeout(entryTimer);
 const page=location.hash.slice(1)||'home',i=chapters.indexOf(page);
+document.querySelector('.departing-cover')?.remove();
+const outgoing=page==='projects'&&renderedPage==='home'?app.querySelector('.cover'):null;
+const coverBounds=outgoing?.getBoundingClientRect();
 if(renderedPage==='gallery'&&page!=='gallery'&&(!galleryState||window.scrollY>0))rememberGallery();
 const enterChapter=(renderedPage==='about'&&page==='story')||
  (renderedPage==='projects'&&page==='collection')||
@@ -187,6 +190,22 @@ document.title=(labels[page]||'首頁')+'｜振美建設';if(page==='gallery'&&g
  app.querySelectorAll('details').forEach((row,index)=>row.open=!!saved.opened[index]);
  window.scrollTo(0,saved.y);
 }else window.scrollTo(0,0);
+if(outgoing){
+ outgoing.classList.add('departing-cover');
+ outgoing.inert=true;
+ outgoing.setAttribute('aria-hidden','true');
+ Object.assign(outgoing.style,{top:coverBounds.top+'px',left:coverBounds.left+'px',width:coverBounds.width+'px',height:coverBounds.height+'px'});
+ document.body.append(outgoing);
+ const target=app.querySelector('.scene:not([inert]) .plate');
+ const reveal=()=>{
+   if(!outgoing.isConnected)return;
+   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+   if(!reduced)app.querySelector('.scene:not([inert]) .story-title')?.animate([{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:680,delay:250,fill:'backwards',easing:'ease-out'});
+   const fade=outgoing.animate([{opacity:1},{opacity:0}],{duration:reduced?260:900,easing:'ease-in-out',fill:'forwards'});
+   fade.finished.then(()=>outgoing.remove(),()=>outgoing.remove());
+ };
+ target.decode().then(reveal,reveal);
+}
 if(bridge)transitionPhoto(bridge,origin,app.querySelector(returnChapter?coverPhoto:detailPhoto),returnChapter);
 }
 function transitionPhoto(bridge,origin,target,returning){
