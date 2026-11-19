@@ -29,7 +29,7 @@ main{padding-bottom:var(--contact-height)}
 .contacts a{font-size:12px;padding:0 clamp(7px,2vw,16px);white-space:nowrap}
 .chapter-rail .scene,.cover{min-height:calc(100svh - var(--contact-height))}
 @media(max-height:580px){.chapter-rail .scene{min-height:max(510px,calc(100svh - var(--contact-height)))}.cover{min-height:max(405px,calc(100svh - var(--contact-height)))}}
-.cover.departing-cover{position:fixed;z-index:6;min-height:0;pointer-events:none;margin:0}</style><main id="app"></main><script>
+.cover.departing-cover{position:fixed;z-index:6;min-height:0;pointer-events:none;margin:0}.contacts a,.bar a{min-width:44px}.contacts a span,.bar a span,.chapter .bar a span{font:20px/1 "Apple Color Emoji","Segoe UI Emoji",sans-serif;text-shadow:none}</style><main id="app"></main><script>
 const photos={"about": "photos/about.jpg", "cover": "photos/cover.jpg", "craft": "photos/craft.jpg", "gallery": "photos/gallery.jpg", "gallerytile": "photos/gallerytile.jpg", "progress": "photos/progress.jpg", "projects": "photos/projects.jpg", "signature": "photos/signature.jpg"};
 const chapters=['about','projects','craft'];
 const labels={about:'關於振美',projects:'建築作品',craft:'建築工藝',collection:'作品導覽',progress:'工程進度',gallery:'歷年作品'};
@@ -40,9 +40,9 @@ const photo=(key,alt,cls='')=>'<img class="'+cls+'" decoding="async"'+dimensions
 const link=(id,label,cls='')=>'<a class="'+cls+'" href="#'+id+'">'+label+'</a>';
 const app=document.querySelector('main');
 const archive={"art0": "photos/art0.jpg", "art1": "photos/art1.jpg", "art2": "photos/art2.jpg", "case00": "photos/case00.jpg", "case01": "photos/case01.jpg", "case02": "photos/case02.jpg", "case10": "photos/case10.jpg", "case11": "photos/case11.jpg", "case12": "photos/case12.jpg", "case20": "photos/case20.jpg", "case21": "photos/case21.jpg", "case22": "photos/case22.jpg", "case30": "photos/case30.jpg", "case31": "photos/case31.jpg", "case32": "photos/case32.jpg", "case40": "photos/case40.jpg", "case41": "photos/case41.jpg", "case42": "photos/case42.jpg", "events0": "photos/events0.jpg", "events1": "photos/events1.jpg", "ground0": "photos/ground0.jpg", "new0": "photos/new0.jpg", "suppliers0": "photos/suppliers0.jpg", "suppliers1": "photos/suppliers1.jpg"};
-const external=(url,label)=>'<a href="'+url+'" target="_blank" rel="noopener noreferrer">'+label+'</a>';
+const emojiLink=(url,label,emoji)=>'<a href="'+url+'" aria-label="'+label+'" title="'+label+'"'+(url.startsWith('https:')?' target="_blank" rel="noopener noreferrer"':'')+'><span aria-hidden="true">'+emoji+'</span></a>';
 const archiveImage=(id,alt)=>'<img class="archive-image"'+dimensions(id)+' loading="lazy" decoding="async" src="'+archive[id]+'" alt="'+alt+'">';
-const contacts='<footer class="contacts" aria-label="聯絡振美">'+external('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent('高雄市前鎮區中華五路768號 振美建設'),'地圖')+external('https://www.facebook.com/manguanginc','Facebook')+external('https://www.instagram.com/manguangmengsuo/','Instagram')+'<a href="mailto:chenmeiltd@gmail.com">Email</a></footer>';
+const contacts='<footer class="contacts" aria-label="聯絡振美">'+emojiLink('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent('高雄市前鎮區中華五路768號 振美建設'),'地圖','📍')+emojiLink('https://www.facebook.com/manguanginc','Facebook','📘')+emojiLink('https://www.instagram.com/manguangmengsuo/','Instagram','📷')+emojiLink('mailto:chenmeiltd@gmail.com','Email','✉️')+'</footer>';
 const fold=(title,body)=>'<details><summary>'+title+'</summary>'+body+'</details>';
 const para=text=>'<p>'+text+'</p>';
 const galleryCases=['臻美','克里翁','貝拉莫里','漫光蒙梭','浮島森林','居采麓園'];
@@ -100,7 +100,7 @@ if(i>=0&&currentRail){
 }
 app.className=i>=0?'chapter':!labels[page]?'welcome':'inner';
 const back=i>=0?'home':page==='story'?'about':page==='studio'?'craft':page==='collection'?'projects':'collection';
-const bar='<header class="bar">'+link(back,'返回')+'<span>振美建設 ｜ '+(labels[page]||'')+'</span>'+link('home','首頁')+'</header>';
+const bar='<header class="bar">'+emojiLink('#'+back,'返回','⬅️')+'<span>振美建設 ｜ '+(labels[page]||'')+'</span>'+emojiLink('#home','首頁','🏠')+'</header>';
 if(!labels[page])app.innerHTML='<section class="cover"><small>Reliable and devoted, sincere and relevant, to build the best.</small>'+photo('cover','工地人物油畫','painting')+photo('signature','振美建設｜居采公司','signature')+link('projects','進入振美','enter')+'</section>';
 else if(i>=0){
  const rail=document.createElement('div');
@@ -183,7 +183,7 @@ projectImage=new Image();projectImage.fetchPriority='high';projectImage.src=phot
 const ready=projectImage.decode().then(()=>true,()=>false);
 ready.then(ok=>{if(ok&&cover.isConnected){for(const key of ['about','craft']){const image=new Image();image.fetchPriority='low';image.src=photos[key]}}});
 let allowAuto=true;
-entryTimer=setTimeout(async()=>{if(await ready&&cover.isConnected&&allowAuto)location.replace('#projects')},3000);
+entryTimer=setTimeout(async()=>{if(await ready&&cover.isConnected&&allowAuto)location.replace('#projects')},5000);
 app.querySelector('footer').onfocusin=()=>{allowAuto=false;clearTimeout(entryTimer)}}
 document.title=(labels[page]||'首頁')+'｜振美建設';if(page==='gallery'&&galleryState){
  const saved=galleryState;
