@@ -181,7 +181,7 @@ sections.story.push(
 );
 sections.studio[0][1]+= '<h3>工法進化</h3>'+sheet('evolution','工法進化');
 function chapterContent(page){
- if(page==='collection')return '<article>'+link('progress',photo('progress','PROGRESS')+'<span class="collection-name">沐居采　｜　新案預告</span>','tile')+'<h1>一次只專心在一個案子，把它做好。</h1>'+link('gallery',photo('gallerytile','GALLERY')+'<span class="collection-name">歷年業績　／　作品總表</span>','tile')+'</article>';
+ if(page==='collection')return '<article>'+link('progress',photo('progress','PROGRESS')+'<span class="collection-name">沐居采　｜　新案預告</span>','tile')+link('gallery',photo('gallerytile','GALLERY')+'<span class="collection-name">歷年業績　／　作品總表</span>','tile')+'</article>';
  return '<article><h1>'+labels[page]+'</h1>'+picker('選擇主題',sections[page].map(row=>row[0]))+sections[page].map(([title,body],n)=>'<details class="editorial-fold"'+(n===0?' open':'')+'><summary>'+title+'</summary><div>'+body+'</div></details>').join('')+'</article>';
 }
 function render(){clearTimeout(entryTimer);
