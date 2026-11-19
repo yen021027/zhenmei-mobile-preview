@@ -40,9 +40,17 @@ const photo=(key,alt,cls='')=>'<img class="'+cls+'" decoding="async"'+dimensions
 const link=(id,label,cls='')=>'<a class="'+cls+'" href="#'+id+'">'+label+'</a>';
 const app=document.querySelector('main');
 const archive={"art0": "photos/art0.jpg", "art1": "photos/art1.jpg", "art2": "photos/art2.jpg", "case00": "photos/case00.jpg", "case01": "photos/case01.jpg", "case02": "photos/case02.jpg", "case10": "photos/case10.jpg", "case11": "photos/case11.jpg", "case12": "photos/case12.jpg", "case20": "photos/case20.jpg", "case21": "photos/case21.jpg", "case22": "photos/case22.jpg", "case30": "photos/case30.jpg", "case31": "photos/case31.jpg", "case32": "photos/case32.jpg", "case40": "photos/case40.jpg", "case41": "photos/case41.jpg", "case42": "photos/case42.jpg", "events0": "photos/events0.jpg", "events1": "photos/events1.jpg", "ground0": "photos/ground0.jpg", "new0": "photos/new0.jpg", "suppliers0": "photos/suppliers0.jpg", "suppliers1": "photos/suppliers1.jpg"};
-const emojiLink=(url,label,emoji)=>'<a href="'+url+'" aria-label="'+label+'" title="'+label+'"'+(url.startsWith('https:')?' target="_blank" rel="noopener noreferrer"':'')+'><span aria-hidden="true">'+emoji+'</span></a>';
+const icons={
+ back:'<path d="m10 5-7 7 7 7M3 12h18"/>',
+ home:'<path d="m2 10 10-8 10 8M5 9v12h5v-7h4v7h5V9"/>',
+ map:'<path d="M19.5 9.5c0 5.4-7.5 12-7.5 12s-7.5-6.6-7.5-12a7.5 7.5 0 1 1 15 0Z"/><circle cx="12" cy="9.5" r="2.6"/>',
+ facebook:'<path fill="currentColor" stroke="none" d="M14 22v-9h3l.5-3.5H14V7.3c0-1 .4-1.8 1.8-1.8H18V2.4c-.7-.1-1.8-.3-3.1-.3-3.1 0-5 1.9-5 5.1v2.3H7V13h2.9v9Z"/>',
+ instagram:'<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.8" r="1" fill="currentColor" stroke="none"/>',
+ mail:'<rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3.5 6 8.5 6.8L20.5 6"/>'
+};
+const iconLink=(url,label,key)=>'<a href="'+url+'" aria-label="'+label+'" title="'+label+'"'+(url.startsWith('https:')?' target="_blank" rel="noopener noreferrer"':'')+'><svg aria-hidden="true" focusable="false" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round">'+icons[key]+'</svg></a>';
 const archiveImage=(id,alt)=>'<img class="archive-image"'+dimensions(id)+' loading="lazy" decoding="async" src="'+archive[id]+'" alt="'+alt+'">';
-const contacts='<footer class="contacts" aria-label="聯絡振美">'+emojiLink('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent('高雄市前鎮區中華五路768號 振美建設'),'地圖','📍')+emojiLink('https://www.facebook.com/manguanginc','Facebook','📘')+emojiLink('https://www.instagram.com/manguangmengsuo/','Instagram','📷')+emojiLink('mailto:chenmeiltd@gmail.com','Email','✉️')+'</footer>';
+const contacts='<footer class="contacts" aria-label="聯絡振美">'+iconLink('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent('高雄市前鎮區中華五路768號 振美建設'),'地圖','map')+iconLink('https://www.facebook.com/manguanginc','Facebook','facebook')+iconLink('https://www.instagram.com/manguangmengsuo/','Instagram','instagram')+iconLink('mailto:chenmeiltd@gmail.com','Email','mail')+'</footer>';
 const fold=(title,body)=>'<details><summary>'+title+'</summary>'+body+'</details>';
 const para=text=>'<p>'+text+'</p>';
 const galleryCases=['臻美','克里翁','貝拉莫里','漫光蒙梭','浮島森林','居采麓園'];
@@ -100,7 +108,7 @@ if(i>=0&&currentRail){
 }
 app.className=i>=0?'chapter':!labels[page]?'welcome':'inner';
 const back=i>=0?'home':page==='story'?'about':page==='studio'?'craft':page==='collection'?'projects':'collection';
-const bar='<header class="bar">'+emojiLink('#'+back,'返回','⬅️')+'<span>振美建設 ｜ '+(labels[page]||'')+'</span>'+emojiLink('#home','首頁','🏠')+'</header>';
+const bar='<header class="bar">'+iconLink('#'+back,'返回','back')+'<span>振美建設 ｜ '+(labels[page]||'')+'</span>'+iconLink('#home','首頁','home')+'</header>';
 if(!labels[page])app.innerHTML='<section class="cover"><small>Reliable and devoted, sincere and relevant, to build the best.</small>'+photo('cover','工地人物油畫','painting')+photo('signature','振美建設｜居采公司','signature')+link('projects','進入振美','enter')+'</section>';
 else if(i>=0){
  const rail=document.createElement('div');
