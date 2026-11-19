@@ -29,7 +29,7 @@ main{padding-bottom:var(--contact-height)}
 .contacts a{font-size:12px;padding:0 clamp(7px,2vw,16px);white-space:nowrap}
 .chapter-rail .scene,.cover{min-height:calc(100svh - var(--contact-height))}
 @media(max-height:580px){.chapter-rail .scene{min-height:max(510px,calc(100svh - var(--contact-height)))}.cover{min-height:max(405px,calc(100svh - var(--contact-height)))}}
-.cover.departing-cover{position:fixed;z-index:6;min-height:0;pointer-events:none;margin:0}.contacts a,.bar a{min-width:44px}.contacts a span,.bar a span,.chapter .bar a span{font:20px/1 "Apple Color Emoji","Segoe UI Emoji",sans-serif;text-shadow:none}</style><main id="app"></main><script>
+.cover.departing-cover{position:fixed;z-index:6;min-height:0;pointer-events:none;margin:0}.contacts a,.bar a{min-width:44px}.contacts a span,.bar a span,.chapter .bar a span{font:20px/1 "Apple Color Emoji","Segoe UI Emoji",sans-serif;text-shadow:none}.departing-projects{position:fixed;inset:0;overflow:hidden;pointer-events:none;background:#faf7ef;z-index:1}.chapter-stage.revealing-projects{position:relative;z-index:2}</style><main id="app"></main><script>
 const photos={"about": "photos/about.jpg", "cover": "photos/cover.jpg", "craft": "photos/craft.jpg", "gallery": "photos/gallery.jpg", "gallerytile": "photos/gallerytile.jpg", "progress": "photos/progress.jpg", "projects": "photos/projects.jpg", "signature": "photos/signature.jpg"};
 const chapters=['about','projects','craft'];
 const labels={about:'關於振美',projects:'建築作品',craft:'建築工藝',collection:'作品導覽',progress:'工程進度',gallery:'歷年作品'};
@@ -94,11 +94,14 @@ const enterChapter=(renderedPage==='about'&&page==='story')||
  (renderedPage==='craft'&&page==='studio')||
  (app.classList.contains('chapter')&&['story','collection','studio'].includes(page));
 document.querySelector('.entry-photo-bridge')?.remove();
+document.querySelector('.departing-projects')?.remove();
 const returnChapter=i>=0&&['story','collection','studio'][i]===renderedPage;
 const detailPhoto='.section-photo,.tile img';
 const coverPhoto='.scene:not([inert]) .plate';
 const source=enterChapter?app.querySelector(coverPhoto):returnChapter?app.querySelector(detailPhoto):null;
 const origin=source?.getBoundingClientRect();
+const leavingProjects=returnChapter&&page==='projects'?app.querySelector('article'):null;
+const leavingTop=leavingProjects?.getBoundingClientRect().top;
 const bridge=source?.complete && source.naturalWidth ? source.cloneNode(false) : null;
 renderedPage=page;
 const currentRail=app.querySelector('.chapter-rail');
@@ -214,7 +217,31 @@ if(outgoing){
  };
  target.decode().then(reveal,reveal);
 }
-if(bridge)transitionPhoto(bridge,origin,app.querySelector(returnChapter?coverPhoto:detailPhoto),returnChapter);
+if(leavingProjects&&origin){
+ const stage=app.querySelector('.chapter-stage'),target=app.querySelector(coverPhoto);
+ const backdrop=document.createElement('div');
+ backdrop.className='inner departing-projects';
+ backdrop.inert=true;
+ backdrop.setAttribute('aria-hidden','true');
+ backdrop.append(leavingProjects);
+ leavingProjects.style.marginTop=leavingTop+'px';
+ document.body.append(backdrop);
+ const bounds=stage.getBoundingClientRect();
+ const above=Math.max(0,Math.min(bounds.height,origin.top-bounds.top));
+ const below=Math.max(0,Math.min(bounds.height-above,bounds.bottom-origin.bottom));
+ stage.classList.add('revealing-projects');
+ stage.style.clipPath='inset('+above+'px 0 '+below+'px)';
+ const reveal=()=>{
+   if(!backdrop.isConnected)return;
+   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+   const frames=reduced?[{opacity:0},{opacity:1}]:[{clipPath:stage.style.clipPath},{clipPath:'inset(0px 0px 0px)'}];
+   stage.style.clipPath='';
+   const animation=stage.animate(frames,{duration:reduced?180:650,easing:'cubic-bezier(.32,0,.16,1)'});
+   const finish=()=>{backdrop.remove();stage.classList.remove('revealing-projects')};
+   animation.finished.then(finish,finish);
+ };
+ target.decode().then(reveal,reveal);
+}else if(bridge)transitionPhoto(bridge,origin,app.querySelector(returnChapter?coverPhoto:detailPhoto),returnChapter);
 }
 function transitionPhoto(bridge,origin,target,returning){
  if(!target)return;
