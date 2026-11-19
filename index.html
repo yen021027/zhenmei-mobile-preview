@@ -29,17 +29,25 @@ main{padding-bottom:var(--contact-height)}
 .contacts a{font-size:12px;padding:0 clamp(7px,2vw,16px);white-space:nowrap}
 .chapter-rail .scene,.cover{min-height:calc(100svh - var(--contact-height))}
 @media(max-height:580px){.chapter-rail .scene{min-height:max(510px,calc(100svh - var(--contact-height)))}.cover{min-height:max(405px,calc(100svh - var(--contact-height)))}}
-.cover.departing-cover{position:fixed;z-index:6;min-height:0;pointer-events:none;margin:0}.contacts a,.bar a{min-width:44px}.contacts a span,.bar a span,.chapter .bar a span{font:20px/1 "Apple Color Emoji","Segoe UI Emoji",sans-serif;text-shadow:none}.departing-projects{position:fixed;inset:0;overflow:hidden;pointer-events:none;background:#faf7ef;z-index:1}.chapter-stage.revealing-projects{position:relative;z-index:2}.chapter-stage>.switcher{pointer-events:none}.switcher .tabs{pointer-events:auto}.chapter-entry:focus-visible{outline-offset:-5px}.inner>.bar{position:sticky;top:0;z-index:4;background:#faf7ef}.gallery-intro{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px var(--gutter)}.gallery-intro h1{margin:0}.choose-work{cursor:pointer}#work-list h2{font-size:22px;font-weight:400;scroll-margin-top:82px}#work-list summary{scroll-margin-top:82px}</style><main id="app"></main><script>
+.cover.departing-cover{position:fixed;z-index:6;min-height:0;pointer-events:none;margin:0}.contacts a,.bar a{min-width:44px}.contacts a span,.bar a span,.chapter .bar a span{font:20px/1 "Apple Color Emoji","Segoe UI Emoji",sans-serif;text-shadow:none}.departing-projects{position:fixed;inset:0;overflow:hidden;pointer-events:none;background:#faf7ef;z-index:1}.chapter-stage.revealing-projects{position:relative;z-index:2}.chapter-stage>.switcher{pointer-events:none}.switcher .tabs{pointer-events:auto}.chapter-entry:focus-visible{outline-offset:-5px}.inner>.bar{position:sticky;top:0;z-index:4;background:#faf7ef}.gallery-intro{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px var(--gutter)}.gallery-intro h1{margin:0}.choose-work{cursor:pointer}#work-list h2{font-size:22px;font-weight:400;scroll-margin-top:82px}#work-list summary{scroll-margin-top:82px}
+.inner article>h1,.gallery-intro h1{font-family:Georgia,"Noto Serif TC",serif;letter-spacing:.09em;font-weight:400;color:#302a21}.inner article>h1{margin:22px 0 26px}
+.section-photo{height:clamp(220px,36svh,420px);object-position:50% 45%}
+.editorial-fold{border:0;border-top:1px solid #b8a88d;padding:0}.editorial-fold summary,.case-entry summary{list-style:none;cursor:pointer}.editorial-fold summary::-webkit-details-marker,.case-entry summary::-webkit-details-marker{display:none}
+.editorial-fold summary{display:flex;align-items:center;justify-content:space-between;background:none;padding:19px 2px;border-radius:0;font:22px Georgia,serif;letter-spacing:.12em}.editorial-fold summary:after,.case-entry summary span:after{content:'+';font:22px Georgia;color:#887044}.editorial-fold[open] summary:after,.case-entry[open] summary span:after{content:'−'}.editorial-fold>div>p{line-height:1.95;margin:0 0 22px;color:#514738}
+.gallery-intro{padding-block:20px}.gallery-intro h1{font-size:clamp(26px,6vw,44px)}#work-list{max-width:900px;margin:auto}#work-list h2{letter-spacing:.14em;border-top:1px solid #bcab8b;padding-top:18px}
+.case-entry{border:0;padding:0;margin:0 0 24px}.case-entry summary{padding:0;border-radius:0;background:transparent}.case-entry summary .archive-image{width:100%;margin:0;height:clamp(175px,54vw,390px);object-fit:cover}.case-entry summary span{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #bcab8b;font:23px Georgia,serif;letter-spacing:.1em}.case-body{padding-top:14px}.case-body .archive-image{width:100%;margin:0 0 10px;height:auto}
+.event-row{padding:14px 0;border-top:1px solid #d8cebb}.event-row small{color:#705c3a;letter-spacing:.1em}.event-row p{margin:5px 0 12px}.project-note{max-width:740px;margin:auto}.project-note h1{border-bottom:1px solid #b8a88d;padding-bottom:16px}
+</style><main id="app"></main><script>
 const photos={"about": "photos/about.jpg", "cover": "photos/cover.jpg", "craft": "photos/craft.jpg", "gallery": "photos/gallery.jpg", "gallerytile": "photos/gallerytile.jpg", "progress": "photos/progress.jpg", "projects": "photos/projects.jpg", "signature": "photos/signature.jpg"};
 const chapters=['about','projects','craft'];
 const labels={about:'關於振美',projects:'建築作品',craft:'建築工藝',collection:'作品導覽',progress:'新案預告',gallery:'歷年作品'};
 const captions=['理想居所，精彩生活。','傾心一時，專注一案。','沒有最好，只有更好。'];
-const sizes={"art1": [865, 1293], "new0": [478, 1030], "projects": [800, 1859], "case41": [960, 480], "art0": [865, 1293], "case11": [960, 480], "case12": [960, 480], "events1": [960, 622], "case22": [960, 608], "suppliers0": [817, 285], "case42": [960, 480], "case30": [960, 480], "case20": [960, 480], "craft": [800, 1859], "suppliers1": [817, 285], "case21": [960, 480], "signature": [380, 252], "case10": [960, 480], "case00": [960, 480], "art2": [865, 1293], "ground0": [960, 641], "gallery": [1375, 2640], "events0": [684, 1030], "progress": [800, 640], "case40": [960, 480], "cover": [800, 1600], "gallerytile": [800, 638], "case31": [960, 480], "case01": [960, 480], "about": [800, 1859], "case02": [960, 480], "case32": [960, 480]};
+const sizes={"art1": [865, 1293], "new0": [478, 1030], "projects": [800, 1859], "case41": [960, 480], "art0": [865, 1293], "case11": [960, 480], "case12": [960, 480], "events1": [960, 622], "case22": [960, 608], "suppliers0": [817, 285], "case42": [960, 480], "case30": [960, 480], "case20": [960, 480], "craft": [800, 1859], "suppliers1": [817, 285], "case21": [960, 480], "signature": [380, 252], "case10": [960, 480], "case00": [960, 480], "art2": [865, 1293], "ground0": [960, 641], "gallery": [1375, 2640], "events0": [684, 1030], "progress": [800, 640], "case40": [960, 480], "cover": [800, 1600], "gallerytile": [800, 638], "case31": [960, 480], "case01": [960, 480], "about": [800, 1859], "case02": [960, 480], "case32": [960, 480], "case0extra3": [1100, 550], "case0extra1": [1100, 550], "case0extra2": [1100, 550], "case0extra4": [1100, 550], "case1extra0": [1100, 550], "case1extra1": [1100, 550], "case1extra2": [1100, 550], "case1extra3": [1100, 550], "case2extra0": [1100, 550], "case2extra1": [1100, 550], "case2extra2": [1100, 550], "case2extra3": [1100, 550], "case3extra2": [1100, 550], "case3extra0": [1100, 550], "case3extra1": [1100, 550], "case3extra3": [1100, 550], "case3extra4": [1100, 550], "case3extra5": [1100, 550], "case4extra0": [1100, 550], "case4extra1": [1100, 550], "case4extra2": [1100, 550]};
 const dimensions=id=>' width="'+sizes[id][0]+'" height="'+sizes[id][1]+'"';
 const photo=(key,alt,cls='')=>'<img class="'+cls+'" decoding="async"'+dimensions(key)+' src="'+photos[key]+'" alt="'+alt+'">';
 const link=(id,label,cls='')=>'<a class="'+cls+'" href="#'+id+'">'+label+'</a>';
 const app=document.querySelector('main');
-const archive={"art0": "photos/art0.jpg", "art1": "photos/art1.jpg", "art2": "photos/art2.jpg", "case00": "photos/case00.jpg", "case01": "photos/case01.jpg", "case02": "photos/case02.jpg", "case10": "photos/case10.jpg", "case11": "photos/case11.jpg", "case12": "photos/case12.jpg", "case20": "photos/case20.jpg", "case21": "photos/case21.jpg", "case22": "photos/case22.jpg", "case30": "photos/case30.jpg", "case31": "photos/case31.jpg", "case32": "photos/case32.jpg", "case40": "photos/case40.jpg", "case41": "photos/case41.jpg", "case42": "photos/case42.jpg", "events0": "photos/events0.jpg", "events1": "photos/events1.jpg", "ground0": "photos/ground0.jpg", "new0": "photos/new0.jpg", "suppliers0": "photos/suppliers0.jpg", "suppliers1": "photos/suppliers1.jpg"};
+const archive={"art0": "photos/art0.jpg", "art1": "photos/art1.jpg", "art2": "photos/art2.jpg", "case00": "photos/case00.jpg", "case01": "photos/case01.jpg", "case02": "photos/case02.jpg", "case10": "photos/case10.jpg", "case11": "photos/case11.jpg", "case12": "photos/case12.jpg", "case20": "photos/case20.jpg", "case21": "photos/case21.jpg", "case22": "photos/case22.jpg", "case30": "photos/case30.jpg", "case31": "photos/case31.jpg", "case32": "photos/case32.jpg", "case40": "photos/case40.jpg", "case41": "photos/case41.jpg", "case42": "photos/case42.jpg", "events0": "photos/events0.jpg", "events1": "photos/events1.jpg", "ground0": "photos/ground0.jpg", "new0": "photos/new0.jpg", "suppliers0": "photos/suppliers0.jpg", "suppliers1": "photos/suppliers1.jpg", "case0extra3": "photos/case0extra3.jpg", "case0extra1": "photos/case0extra1.jpg", "case0extra2": "photos/case0extra2.jpg", "case0extra4": "photos/case0extra4.jpg", "case1extra0": "photos/case1extra0.jpg", "case1extra1": "photos/case1extra1.jpg", "case1extra2": "photos/case1extra2.jpg", "case1extra3": "photos/case1extra3.jpg", "case2extra0": "photos/case2extra0.jpg", "case2extra1": "photos/case2extra1.jpg", "case2extra2": "photos/case2extra2.jpg", "case2extra3": "photos/case2extra3.jpg", "case3extra2": "photos/case3extra2.jpg", "case3extra0": "photos/case3extra0.jpg", "case3extra1": "photos/case3extra1.jpg", "case3extra3": "photos/case3extra3.jpg", "case3extra4": "photos/case3extra4.jpg", "case3extra5": "photos/case3extra5.jpg", "case4extra0": "photos/case4extra0.jpg", "case4extra1": "photos/case4extra1.jpg", "case4extra2": "photos/case4extra2.jpg"};
 const icons={
  back:'<path d="m10 5-7 7 7 7M3 12h18"/>',
  home:'<path d="m2 10 10-8 10 8M5 9v12h5v-7h4v7h5V9"/>',
@@ -54,9 +62,14 @@ const contacts='<footer class="contacts" aria-label="聯絡振美">'+iconLink('h
 const fold=(title,body)=>'<details><summary>'+title+'</summary>'+body+'</details>';
 const para=text=>'<p>'+text+'</p>';
 const galleryCases=['臻美','克里翁','貝拉莫里','漫光蒙梭','浮島森林','居采麓園'];
+const casePhotos=[["case0extra3", "case0extra1", "case0extra2", "case0extra4"], ["case1extra0", "case1extra1", "case1extra2", "case1extra3"], ["case2extra0", "case2extra1", "case2extra2", "case2extra3"], ["case3extra2", "case3extra0", "case3extra1", "case3extra3", "case3extra4", "case3extra5"], ["case4extra0", "case4extra1", "case4extra2"]];
 const galleryFold=(name,i)=>{
- if(i===5)return fold(name,para('2020 年 11 月，麓園舉行動土典禮。')+archiveImage('ground0','麓園動土典禮紀錄'));
- return fold(name,[0,1,2].map(n=>archiveImage('case'+i+n,name+'作品資料，第 '+(n+1)+' 張')).join(''));
+ const images=casePhotos[i]||['ground0'];
+ const cover=archiveImage(images[0],name+(i===5?'動土典禮':'建築實景'));
+ const detail=i===5?para('2020 年 11 月，麓園舉行動土典禮。'):
+ images.slice(1).map((key,n)=>archiveImage(key,name+'實景，第 '+(n+2)+' 張')).join('')+
+ [0,1,2].map(n=>archiveImage('case'+i+n,name+['案名','建案規格','作品介紹'][n])).join('');
+ return '<details class="case-entry"><summary>'+cover+'<span>'+name+'</span></summary><div class="case-body">'+detail+'</div></details>';
 };
 labels.story='關於振美';labels.studio='建築工藝';
 const sections={
@@ -66,7 +79,10 @@ const sections={
  ['全方位',para('振美從居住者的使用習慣出發，與設計及材料夥伴一起考量機能、尺度與選材。合作名錄包含台灣水泥、一順進口磁磚與柏正衛廚。')]],
  studio:[
  ['工法',para('振美官網在材料與合作廠商名錄中列出東和林中空樓板與 YKK AP 氣密窗。')+archiveImage('suppliers0','東和林中空樓板資料')+archiveImage('suppliers1','YKK AP 氣密窗資料')],
- ['活動',para('2021 年 2 月｜新春花藝 DIY 課程')+archiveImage('events0','新春花藝課程紀錄')+para('2021 年 1 至 6 月｜蔡士弘個展 × 漫光蒙梭')+archiveImage('events1','蔡士弘個展作品《幻術之吻》')+para('2020 年 12 月｜手做聖誕小樹 DIY 課程')+para('2020 年 11 月｜麓園動土典禮')+para('2020 年 10 月｜中秋清酒品飲會')]]
+ ['活動',[
+ ['2021.02','新春花藝 DIY 課程','events0'],['2021.01–06','蔡士弘個展 × 漫光蒙梭','events1'],['2020.12','手做聖誕小樹 DIY 課程'],['2020.11','麓園動土典禮','ground0'],['2020.11','With Love 優惠活動 × Stage 5 頂級餐酒館'],['2020.10','中秋清酒品飲會'],['2020.10','With Love 優惠活動 × 眺吧餐酒館'],['2020.07–12','蘇崇銘個展 × 漫光蒙梭'],['2020.01–06','柳依蘭個展 × 漫光蒙梭'],['2020.01','祥迎富貴花藝饗宴'],['2019.12','聖誕節手做 DIY 課程'],['2019.09','住戶中秋賞月會'],['2019.08','紳士風尚美學講座']
+ ].map(([date,title,image])=>'<div class="event-row"><small>'+date+'</small><p>'+title+'</p>'+(image?archiveImage(image,title):'')+'</div>').join('')]]
+
 };
 let entryTimer, projectImage, galleryState, renderedPage;
 history.scrollRestoration='manual';
@@ -81,7 +97,7 @@ window.addEventListener('scroll',()=>{if(renderedPage==='gallery'&&location.hash
 app.addEventListener('toggle',e=>{if(renderedPage==='gallery'&&e.target.matches('details')&&location.hash==='#gallery')rememberGallery()},true);
 function chapterContent(page){
  if(page==='collection')return '<article>'+link('progress',photo('progress','PROGRESS')+'<span class="collection-name">沐居采　｜　新案預告</span>','tile')+'<h1>一次只專心在一個案子，把它做好。</h1>'+link('gallery',photo('gallerytile','GALLERY')+'<span class="collection-name">歷年業績　／　作品總表</span>','tile')+'</article>';
- return '<article><h1>'+labels[page]+'</h1>'+sections[page].map(([title,body])=>fold(title,body)).join('')+'</article>';
+ return '<article><h1>'+labels[page]+'</h1>'+sections[page].map(([title,body],n)=>'<details class="editorial-fold"'+(n===0?' open':'')+'><summary>'+title+'</summary><div>'+body+'</div></details>').join('')+'</article>';
 }
 function render(){clearTimeout(entryTimer);
 const page=location.hash.slice(1)||'home',i=chapters.indexOf(page);
@@ -155,7 +171,7 @@ else if(i>=0){
 }
 else if(sections[page]||page==='collection')app.innerHTML=bar+(sections[page]?photo(page==='story'?'about':'craft',labels[page],'section-photo'):'')+chapterContent(page);
 else if(page==='gallery')app.innerHTML=bar+'<div class="gallery-intro"><h1>歷年作品</h1><button type="button" class="action choose-work">選擇作品</button></div>'+photo('gallery','歷年作品手繪建築與年代紀錄','gallery')+'<article id="work-list"><h2 tabindex="-1">作品清單</h2>'+galleryCases.map(galleryFold).join('')+'</article>';
-else app.innerHTML=bar+'<article><h1>沐居采</h1><p>新案預告，工程進度尚未公布。</p>'+archiveImage('new0','振美新案頁的 Coming Soon 預告')+'</article>';
+else app.innerHTML=bar+'<article class="project-note"><h1>沐居采</h1><p>新案預告，工程進度尚未公布。</p>'+archiveImage('new0','振美新案頁的 Coming Soon 預告')+'</article>';
 if(page==='gallery')app.querySelector('.choose-work').onclick=()=>{
  const heading=app.querySelector('#work-list h2');
  heading.focus({preventScroll:true});
