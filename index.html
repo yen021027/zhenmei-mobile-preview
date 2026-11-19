@@ -29,10 +29,10 @@ main{padding-bottom:var(--contact-height)}
 .contacts a{font-size:12px;padding:0 clamp(7px,2vw,16px);white-space:nowrap}
 .chapter-rail .scene,.cover{min-height:calc(100svh - var(--contact-height))}
 @media(max-height:580px){.chapter-rail .scene{min-height:max(510px,calc(100svh - var(--contact-height)))}.cover{min-height:max(405px,calc(100svh - var(--contact-height)))}}
-.cover.departing-cover{position:fixed;z-index:6;min-height:0;pointer-events:none;margin:0}.contacts a,.bar a{min-width:44px}.contacts a span,.bar a span,.chapter .bar a span{font:20px/1 "Apple Color Emoji","Segoe UI Emoji",sans-serif;text-shadow:none}.departing-projects{position:fixed;inset:0;overflow:hidden;pointer-events:none;background:#faf7ef;z-index:1}.chapter-stage.revealing-projects{position:relative;z-index:2}.chapter-stage>.switcher{pointer-events:none}.switcher .tabs{pointer-events:auto}.chapter-entry:focus-visible{outline-offset:-5px}</style><main id="app"></main><script>
+.cover.departing-cover{position:fixed;z-index:6;min-height:0;pointer-events:none;margin:0}.contacts a,.bar a{min-width:44px}.contacts a span,.bar a span,.chapter .bar a span{font:20px/1 "Apple Color Emoji","Segoe UI Emoji",sans-serif;text-shadow:none}.departing-projects{position:fixed;inset:0;overflow:hidden;pointer-events:none;background:#faf7ef;z-index:1}.chapter-stage.revealing-projects{position:relative;z-index:2}.chapter-stage>.switcher{pointer-events:none}.switcher .tabs{pointer-events:auto}.chapter-entry:focus-visible{outline-offset:-5px}.inner>.bar{position:sticky;top:0;z-index:4;background:#faf7ef}.gallery-intro{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px var(--gutter)}.gallery-intro h1{margin:0}.choose-work{cursor:pointer}#work-list h2{font-size:22px;font-weight:400;scroll-margin-top:82px}#work-list summary{scroll-margin-top:82px}</style><main id="app"></main><script>
 const photos={"about": "photos/about.jpg", "cover": "photos/cover.jpg", "craft": "photos/craft.jpg", "gallery": "photos/gallery.jpg", "gallerytile": "photos/gallerytile.jpg", "progress": "photos/progress.jpg", "projects": "photos/projects.jpg", "signature": "photos/signature.jpg"};
 const chapters=['about','projects','craft'];
-const labels={about:'關於振美',projects:'建築作品',craft:'建築工藝',collection:'作品導覽',progress:'工程進度',gallery:'歷年作品'};
+const labels={about:'關於振美',projects:'建築作品',craft:'建築工藝',collection:'作品導覽',progress:'新案預告',gallery:'歷年作品'};
 const captions=['理想居所，精彩生活。','傾心一時，專注一案。','沒有最好，只有更好。'];
 const sizes={"art1": [865, 1293], "new0": [478, 1030], "projects": [800, 1859], "case41": [960, 480], "art0": [865, 1293], "case11": [960, 480], "case12": [960, 480], "events1": [960, 622], "case22": [960, 608], "suppliers0": [817, 285], "case42": [960, 480], "case30": [960, 480], "case20": [960, 480], "craft": [800, 1859], "suppliers1": [817, 285], "case21": [960, 480], "signature": [380, 252], "case10": [960, 480], "case00": [960, 480], "art2": [865, 1293], "ground0": [960, 641], "gallery": [1375, 2640], "events0": [684, 1030], "progress": [800, 640], "case40": [960, 480], "cover": [800, 1600], "gallerytile": [800, 638], "case31": [960, 480], "case01": [960, 480], "about": [800, 1859], "case02": [960, 480], "case32": [960, 480]};
 const dimensions=id=>' width="'+sizes[id][0]+'" height="'+sizes[id][1]+'"';
@@ -80,7 +80,7 @@ function rememberGallery(){
 window.addEventListener('scroll',()=>{if(renderedPage==='gallery'&&location.hash==='#gallery'&&window.scrollY>0)rememberGallery()},{passive:true});
 app.addEventListener('toggle',e=>{if(renderedPage==='gallery'&&e.target.matches('details')&&location.hash==='#gallery')rememberGallery()},true);
 function chapterContent(page){
- if(page==='collection')return '<article>'+link('progress',photo('progress','PROGRESS')+'<span class="collection-name">熱銷建案　／　沐居采</span>','tile')+'<h1>一次只專心在一個案子，把它做好。</h1>'+link('gallery',photo('gallerytile','GALLERY')+'<span class="collection-name">歷年業績　／　作品總表</span>','tile')+'</article>';
+ if(page==='collection')return '<article>'+link('progress',photo('progress','PROGRESS')+'<span class="collection-name">沐居采　｜　新案預告</span>','tile')+'<h1>一次只專心在一個案子，把它做好。</h1>'+link('gallery',photo('gallerytile','GALLERY')+'<span class="collection-name">歷年業績　／　作品總表</span>','tile')+'</article>';
  return '<article><h1>'+labels[page]+'</h1>'+sections[page].map(([title,body])=>fold(title,body)).join('')+'</article>';
 }
 function render(){clearTimeout(entryTimer);
@@ -154,8 +154,13 @@ else if(i>=0){
  },{passive:true});
 }
 else if(sections[page]||page==='collection')app.innerHTML=bar+(sections[page]?photo(page==='story'?'about':'craft',labels[page],'section-photo'):'')+chapterContent(page);
-else if(page==='gallery')app.innerHTML=bar+photo('gallery','歷年作品手繪建築與年代紀錄','gallery')+'<article><h1>歷年作品</h1>'+galleryCases.map(galleryFold).join('')+'</article>';
-else app.innerHTML=bar+'<article>'+photo('progress','PROGRESS 建築細部','progress-hero')+'<h1>沐居采</h1><p>振美的新案頁面目前標示為 Coming Soon，尚未列出沐居采的工程進度。</p>'+archiveImage('new0','振美新案頁的 Coming Soon 預告')+'</article>';
+else if(page==='gallery')app.innerHTML=bar+'<div class="gallery-intro"><h1>歷年作品</h1><button type="button" class="action choose-work">選擇作品</button></div>'+photo('gallery','歷年作品手繪建築與年代紀錄','gallery')+'<article id="work-list"><h2 tabindex="-1">作品清單</h2>'+galleryCases.map(galleryFold).join('')+'</article>';
+else app.innerHTML=bar+'<article><h1>沐居采</h1><p>新案預告，工程進度尚未公布。</p>'+archiveImage('new0','振美新案頁的 Coming Soon 預告')+'</article>';
+if(page==='gallery')app.querySelector('.choose-work').onclick=()=>{
+ const heading=app.querySelector('#work-list h2');
+ heading.focus({preventScroll:true});
+ heading.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+};
 app.insertAdjacentHTML('beforeend',contacts);
 app.classList.toggle('soft-entry',enterChapter);
 if(!labels[page]){const cover=app.querySelector('.painting');
