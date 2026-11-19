@@ -29,7 +29,7 @@ main{padding-bottom:var(--contact-height)}
 .contacts a{font-size:12px;padding:0 clamp(7px,2vw,16px);white-space:nowrap}
 .chapter-rail .scene,.cover{min-height:calc(100svh - var(--contact-height))}
 @media(max-height:580px){.chapter-rail .scene{min-height:max(510px,calc(100svh - var(--contact-height)))}.cover{min-height:max(405px,calc(100svh - var(--contact-height)))}}
-.cover.departing-cover{position:fixed;z-index:6;min-height:0;pointer-events:none;margin:0}.contacts a,.bar a{min-width:44px}.contacts a span,.bar a span,.chapter .bar a span{font:20px/1 "Apple Color Emoji","Segoe UI Emoji",sans-serif;text-shadow:none}.departing-projects{position:fixed;inset:0;overflow:hidden;pointer-events:none;background:#faf7ef;z-index:1}.chapter-stage.revealing-projects{position:relative;z-index:2}</style><main id="app"></main><script>
+.cover.departing-cover{position:fixed;z-index:6;min-height:0;pointer-events:none;margin:0}.contacts a,.bar a{min-width:44px}.contacts a span,.bar a span,.chapter .bar a span{font:20px/1 "Apple Color Emoji","Segoe UI Emoji",sans-serif;text-shadow:none}.departing-projects{position:fixed;inset:0;overflow:hidden;pointer-events:none;background:#faf7ef;z-index:1}.chapter-stage.revealing-projects{position:relative;z-index:2}.chapter-stage>.switcher{pointer-events:none}.chapter-rail .scene{padding-bottom:calc(70px + env(safe-area-inset-bottom))}.chapter-entry:focus-visible{outline-offset:-5px}</style><main id="app"></main><script>
 const photos={"about": "photos/about.jpg", "cover": "photos/cover.jpg", "craft": "photos/craft.jpg", "gallery": "photos/gallery.jpg", "gallerytile": "photos/gallerytile.jpg", "progress": "photos/progress.jpg", "projects": "photos/projects.jpg", "signature": "photos/signature.jpg"};
 const chapters=['about','projects','craft'];
 const labels={about:'關於振美',projects:'建築作品',craft:'建築工藝',collection:'作品導覽',progress:'工程進度',gallery:'歷年作品'};
@@ -119,10 +119,9 @@ else if(i>=0){
  rail.setAttribute('aria-label','主要章節');
  rail.innerHTML=chapters.map((key,index)=>{
    const dest=['story','collection','studio'][index];
-   return '<section class="scene">'+link(dest,photo(key,labels[key],'plate'),'chapter-entry')+'<div class="story-title"><span class="latin">'+key.toUpperCase()+'</span><h1>'+labels[key]+'</h1><p>'+captions[index]+'</p>'+link(dest,['認識振美','探索建築作品','探索工藝與活動'][index],'action')+'</div></section>';
+   return '<section class="scene">'+link(dest,photo(key,labels[key],'plate'),'chapter-entry')+'<div class="story-title"><span class="latin">'+key.toUpperCase()+'</span><h1>'+labels[key]+'</h1><p>'+captions[index]+'</p></div></section>';
  }).join('');
- const tabs=chapters.map(key=>link(key,labels[key])).join('');
- app.innerHTML=bar+'<div class="chapter-stage"><div class="switcher"><p class="hint">左右滑動切換章節</p><nav class="tabs" aria-label="主要章節">'+tabs+'</nav></div></div>';
+ app.innerHTML=bar+'<div class="chapter-stage"><div class="switcher"><p class="hint">點選封面進入　·　左右滑動換章節</p></div></div>';
  if(projectImage&&projectImage.complete&&projectImage.naturalWidth){
    const plate=rail.querySelectorAll('.plate')[1];
    projectImage.className=plate.className;projectImage.alt=plate.alt;
