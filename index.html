@@ -228,7 +228,7 @@ function transitionPhoto(bridge,origin,target,returning){
 function shift(n){const i=chapters.indexOf(location.hash.slice(1));if(i>=0&&chapters[i+n])location.hash=chapters[i+n]}
 function markChapter(index){
  const key=chapters[index];
- app.querySelector('.bar span').textContent='振美建設 ｜ '+labels[key];
+ app.querySelector('.bar > span').textContent='振美建設 ｜ '+labels[key];
  document.title=labels[key]+'｜振美建設';
  app.querySelectorAll('.scene').forEach((scene,n)=>scene.inert=n!==index);
  app.querySelectorAll('.tabs a').forEach((tab,n)=>{if(n===index)tab.setAttribute('aria-current','page');else tab.removeAttribute('aria-current')});
