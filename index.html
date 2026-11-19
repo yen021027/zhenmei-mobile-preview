@@ -77,7 +77,8 @@ const pagesRoot=bookRoot.replace('books/','book-pages/');
 const books={beilamoli:['貝拉莫里',48,31],manguangmengsuo:['漫光蒙梭',42,81],interview:['人物訪談',20,1.4]};
 const originalBookPages=[];
 const bookPage=(id,n)=>{const key=id+'-'+String(n).padStart(2,'0');return originalBookPages.includes(key)?pagesRoot+key+'.jpg':'optimized/book-pages-'+key+'.webp'};
-function reader(id,start=1){
+function reader(id){
+ const start=1;
  const [title,total,mb]=books[id];
  const options=Array.from({length:total},(_,i)=>'<option value="'+(i+1)+'"'+(i+1===start?' selected':'')+'>'+ (i+1)+' / '+total+'</option>').join('');
  return '<details class="reader" data-book="'+id+'" data-page="'+start+'"><summary>閱讀'+title+'電子書</summary><div class="reader-tools"><button type="button" data-step="-1" '+(start===1?'disabled':'')+'>上一頁</button><select aria-label="跳至電子書頁碼">'+options+'</select><button type="button" data-step="1">下一頁</button></div><output class="turn-status" aria-live="polite"></output><img loading="lazy" decoding="async" src="'+bookPage(id,start)+'" alt="'+title+'電子書，第 '+start+' 頁"><a href="'+bookRoot+id+'.pdf" target="_blank" rel="noopener">開啟完整 PDF（'+mb+' MB）</a></details>';
@@ -101,7 +102,22 @@ function prepareAdjacent(box,n){
 }
 app.addEventListener('toggle',e=>{
  const box=e.target;
- if(box.matches('.reader')&&box.open)prepareAdjacent(box,Number(box.dataset.page));
+ if(!box.matches('.reader')){
+   if(!box.open)box.querySelectorAll('.reader[open]').forEach(reader=>reader.open=false);
+   return;
+ }
+ if(box.open){prepareAdjacent(box,1);return}
+ // Invalidate a pending page turn before resetting the closed reader.
+ box.dataset.turn=String(Number(box.dataset.turn||0)+1);
+ box.dataset.page='1';
+ box.querySelector('select').value='1';
+ box.querySelector('output').textContent='';
+ box.querySelector('[data-step="-1"]').disabled=true;
+ box.querySelector('[data-step="1"]').disabled=false;
+ const img=box.querySelector('img');
+ img.src=bookPage(box.dataset.book,1);
+ img.alt=books[box.dataset.book][0]+'電子書，第 1 頁';
+ readerCache.delete(box);
 },true);
 async function setBookPage(box,page){
  const id=box.dataset.book,[title,total]=books[id],n=Math.max(1,Math.min(total,page));
@@ -177,7 +193,7 @@ const people=[
  ['副總經理及執行團隊','林易成','兄弟情誼，是合作的磐石','林易成加入後接手銷售與客戶服務。他在訪談裡談到與總經理的分工，也談為什麼要由熟悉作品的團隊親自向住戶介紹建築。',14,14]
  ];
 sections.story.push(
- ['人物介紹', people.map(([role,name,title,abstract,n,page])=>'<section class="interview-profile"><p class="profile-role">'+role+' · '+name+'</p><h3>'+title+'</h3><p class="profile-abstract">'+abstract+'</p>'+archiveImage('src-character'+n,name+'肖像')+reader('interview',page)+'</section>').join('')],
+ ['人物介紹', people.map(([role,name,title,abstract,n])=>'<section class="interview-profile"><p class="profile-role">'+role+' · '+name+'</p><h3>'+title+'</h3><p class="profile-abstract">'+abstract+'</p>'+archiveImage('src-character'+n,name+'肖像')+reader('interview')+'</section>').join('')],
  ['合作夥伴',sheet('partners','設計團隊',[1,2,3,4,5])+'<h3>材料與設備</h3>'+sheet('partners','合作廠商',[8,9,10,11,12])],
  ['振美大事記',sheet('memorabilia','振美大事記',Array.from({length:12},(_,i)=>i+1))],
  ['聯絡振美',para('高雄市前鎮區中華五路 768 號')+sheet('contact','振美聯絡資訊')]
