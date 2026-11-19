@@ -22,7 +22,7 @@ details{padding:8px 0}details summary{border-radius:20px;padding:14px 12px;backg
  @keyframes chapter-photo-in{from{opacity:.74}to{opacity:1}}
  @keyframes chapter-copy-in{from{opacity:.45;transform:translateY(5px)}to{opacity:1;transform:none}}
 }.entry-photo-bridge{position:fixed;object-fit:cover;pointer-events:none;z-index:5;max-width:none}.tile img{height:auto}
-@media(prefers-reduced-motion:no-preference){.soft-entry article>h1,.soft-entry article>details,.soft-entry article>.tile:not(:first-child){animation:entry-reading-in 540ms cubic-bezier(.2,.65,.3,1) 180ms both}@keyframes entry-reading-in{from{opacity:.2;transform:translateY(13px)}to{opacity:1;transform:none}}}@media(prefers-reduced-motion:no-preference){.returning .scene:not([inert]) .story-title,.returning .switcher{animation:return-labels 500ms ease-out 280ms both}@keyframes return-labels{from{opacity:.25}to{opacity:1}}}.opening-cover:after{content:"";position:absolute;inset:0;background:#faf7ef;pointer-events:none;z-index:1}.opening-cover>.switcher{visibility:hidden}.inner article>img.progress-hero{height:auto;max-height:none}.scene .scroll-cue{background:transparent;color:white;border:0;border-radius:0;border-bottom:1px solid #ddc59b;padding:4px 0;text-shadow:0 1px 4px #18120c}.scene .scroll-cue:focus-visible{outline-offset:4px}#chapter-reading{display:flow-root;background:#faf7ef}</style><main id="app"></main><script>
+@media(prefers-reduced-motion:no-preference){.soft-entry article>h1,.soft-entry article>details,.soft-entry article>.tile:not(:first-child){animation:entry-reading-in 540ms cubic-bezier(.2,.65,.3,1) 180ms both}@keyframes entry-reading-in{from{opacity:.2;transform:translateY(13px)}to{opacity:1;transform:none}}}@media(prefers-reduced-motion:no-preference){.returning .scene:not([inert]) .story-title,.returning .switcher{animation:return-labels 500ms ease-out 280ms both}@keyframes return-labels{from{opacity:.25}to{opacity:1}}}.opening-cover:after{content:"";position:absolute;inset:0;background:#faf7ef;pointer-events:none;z-index:1}.opening-cover>.switcher{visibility:hidden}.inner article>img.progress-hero{height:auto;max-height:none}.scene .scroll-cue{background:transparent;color:white;border:0;border-radius:0;border-bottom:1px solid #ddc59b;padding:4px 0;text-shadow:0 1px 4px #18120c}.scene .scroll-cue:focus-visible{outline-offset:4px}</style><main id="app"></main><script>
 const photos={"about": "photos/about.jpg", "cover": "photos/cover.jpg", "craft": "photos/craft.jpg", "gallery": "photos/gallery.jpg", "gallerytile": "photos/gallerytile.jpg", "progress": "photos/progress.jpg", "projects": "photos/projects.jpg", "signature": "photos/signature.jpg"};
 const chapters=['about','projects','craft'];
 const labels={about:'關於振美',projects:'建築作品',craft:'建築工藝',collection:'作品導覽',progress:'工程進度',gallery:'歷年作品'};
@@ -98,7 +98,7 @@ else if(i>=0){
  rail.setAttribute('aria-label','主要章節');
  rail.innerHTML=chapters.map((key,index)=>{
    const dest=['story','collection','studio'][index];
-   return '<section class="scene">'+link(dest,photo(key,labels[key],'plate'),'chapter-entry')+'<div class="story-title"><span class="latin">'+key.toUpperCase()+'</span><h1>'+labels[key]+'</h1><p>'+captions[index]+'</p>'+'<a class="action scroll-cue" href="#chapter-reading">往下滑，'+['認識振美','探索建築作品','探索工藝與活動'][index]+'</a>'+'</div></section>';
+   return '<section class="scene">'+link(dest,photo(key,labels[key],'plate'),'chapter-entry')+'<div class="story-title"><span class="latin">'+key.toUpperCase()+'</span><h1>'+labels[key]+'</h1><p>'+captions[index]+'</p>'+'<a class="action scroll-cue" href="#'+dest+'">往下滑，'+['認識振美','探索建築作品','探索工藝與活動'][index]+'</a>'+'</div></section>';
  }).join('');
  const tabs=chapters.map(key=>link(key,labels[key])).join('');
  app.innerHTML=bar+'<div class="chapter-stage"><div class="switcher"><p class="hint">左右滑動切換章節</p><nav class="tabs" aria-label="主要章節">'+tabs+'</nav></div></div>';
@@ -108,12 +108,38 @@ else if(i>=0){
    plate.replaceWith(projectImage);
  }
  app.querySelector('.chapter-stage').prepend(rail);
- app.querySelector('.chapter-stage').insertAdjacentHTML('afterend','<section id="chapter-reading" class="inner" aria-label="章節內容"></section>');
- rail.addEventListener('click',event=>{
-   if(!event.target.closest('.scroll-cue'))return;
-   event.preventDefault();
-   app.querySelector('#chapter-reading').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
- });
+ let gesture;
+ const openVisible=()=>{
+   const chapter=Math.round(rail.scrollLeft/rail.clientWidth);
+   const dest=['story','collection','studio'][chapter];
+   if(dest&&rail.isConnected)location.hash=dest;
+ };
+ rail.addEventListener('touchstart',event=>{
+   const point=event.touches[0];
+   gesture=event.touches.length===1?{x:point.clientX,y:point.clientY,axis:null}:null;
+ },{passive:true});
+ rail.addEventListener('touchmove',event=>{
+   if(!gesture||event.touches.length!==1){gesture=null;return}
+   const point=event.touches[0],dx=point.clientX-gesture.x,up=gesture.y-point.clientY;
+   if(!gesture.axis&&Math.max(Math.abs(dx),Math.abs(up))>10)
+     gesture.axis=up>Math.abs(dx)*1.3?'up':'native';
+   if(gesture.axis==='up'&&event.cancelable)event.preventDefault();
+ },{passive:false});
+ rail.addEventListener('touchend',event=>{
+   const point=event.changedTouches[0];
+   if(gesture?.axis==='up'&&gesture.y-point.clientY>55&&gesture.y-point.clientY>Math.abs(point.clientX-gesture.x)*1.3)openVisible();
+   gesture=null;
+ },{passive:true});
+ rail.addEventListener('touchcancel',()=>{gesture=null});
+ let wheelDistance=0,lastWheel=0;
+ rail.addEventListener('wheel',event=>{
+   if(event.ctrlKey||event.deltaY<=0||event.deltaY<=Math.abs(event.deltaX)*1.3)return;
+   if(event.cancelable)event.preventDefault();
+   if(event.timeStamp-lastWheel>180)wheelDistance=0;
+   lastWheel=event.timeStamp;
+   wheelDistance+=event.deltaY*(event.deltaMode===1?16:event.deltaMode===2?innerHeight:1);
+   if(wheelDistance>65)openVisible();
+ },{passive:false});
  rail.scrollLeft=i*rail.clientWidth;
  markChapter(i);
  let settle;
@@ -177,11 +203,6 @@ function transitionPhoto(bridge,origin,target,returning){
 function shift(n){const i=chapters.indexOf(location.hash.slice(1));if(i>=0&&chapters[i+n])location.hash=chapters[i+n]}
 function markChapter(index){
  const key=chapters[index];
- const reading=app.querySelector('#chapter-reading');
- if(reading&&reading.dataset.chapter!==key){
-   reading.dataset.chapter=key;
-   reading.innerHTML=chapterContent(['story','collection','studio'][index]);
- }
  app.querySelector('.bar span').textContent='振美建設 ｜ '+labels[key];
  document.title=labels[key]+'｜振美建設';
  app.querySelectorAll('.scene').forEach((scene,n)=>scene.inert=n!==index);
