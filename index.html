@@ -37,7 +37,7 @@ main{padding-bottom:var(--contact-height)}
 .gallery-intro{padding-block:20px}.gallery-intro h1{font-size:clamp(26px,6vw,44px)}#work-list{max-width:900px;margin:auto}#work-list h2{letter-spacing:.14em;border-top:1px solid #bcab8b;padding-top:18px}
 .case-entry{border:0;padding:0;margin:0 0 24px}.case-entry summary{padding:0;border-radius:0;background:transparent}.case-entry summary .archive-image{width:100%;margin:0;height:clamp(175px,54vw,390px);object-fit:cover}.case-entry summary span{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #bcab8b;font:23px Georgia,serif;letter-spacing:.1em}.case-body{padding-top:14px}.case-body .archive-image{width:100%;margin:0 0 10px;height:auto}
 .event-row{padding:14px 0;border-top:1px solid #d8cebb}.event-row small{color:#705c3a;letter-spacing:.1em}.event-row p{margin:5px 0 12px}.project-note{max-width:740px;margin:auto}.project-note h1{border-bottom:1px solid #b8a88d;padding-bottom:16px}
-.section-picker{display:flex;align-items:center;gap:16px;margin:10px 0 22px;color:#544635;font-size:15px}.section-picker select{flex:1;max-width:320px;min-height:44px;font:inherit;padding:8px 14px;border:1px solid #b7a58d;color:#392e20;background:#faf7ef;border-radius:12px}summary{scroll-margin-top:83px}.case-body details .archive-image{max-width:100%;width:100%;margin:6px 0}.case-body .book-link{display:flex;justify-content:space-between;gap:8px;margin:15px 0}.book-link small{font:12px sans-serif}.editorial-fold h3,.case-body h3{font-weight:400;letter-spacing:.09em}.reader{padding-block:12px}.reader summary{font-size:16px;min-height:44px}.reader-tools{display:flex;align-items:center;justify-content:space-between;padding:12px 0}.reader-tools button{border:1px solid #a8977d;background:transparent;border-radius:999px;min-height:44px;padding-inline:20px}.reader-tools button:disabled{opacity:.4}.reader>img,.case-body .reader>img{display:block;width:100%;height:auto;margin:0 0 10px}.reader output{font-variant-numeric:tabular-nums}.source-card{margin:0 0 14px}.source-card figcaption{text-align:right}.source-card figcaption a{font-size:13px}.reader-tools select{min-height:44px;border:0;border-bottom:1px solid #b6a789;background:transparent;color:#413729;font:inherit}.reader-tools{gap:6px}.page-announcement{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}</style><main id="app"></main><script>
+.section-picker{display:flex;align-items:center;gap:16px;margin:10px 0 22px;color:#544635;font-size:15px}.section-picker select{flex:1;max-width:320px;min-height:44px;font:inherit;padding:8px 14px;border:1px solid #b7a58d;color:#392e20;background:#faf7ef;border-radius:12px}summary{scroll-margin-top:83px}.case-body details .archive-image{max-width:100%;width:100%;margin:6px 0}.case-body .book-link{display:flex;justify-content:space-between;gap:8px;margin:15px 0}.book-link small{font:12px sans-serif}.editorial-fold h3,.case-body h3{font-weight:400;letter-spacing:.09em}.reader{padding-block:12px}.reader summary{font-size:16px;min-height:44px}.reader-tools{display:flex;align-items:center;justify-content:space-between;padding:12px 0}.reader-tools button{border:1px solid #a8977d;background:transparent;border-radius:999px;min-height:44px;padding-inline:20px}.reader-tools button:disabled{opacity:.4}.reader>img,.case-body .reader>img{display:block;width:100%;height:auto;margin:0 0 10px}.reader output{font-variant-numeric:tabular-nums}.source-card{margin:0 0 14px}.source-card figcaption{text-align:right}.source-card figcaption a{font-size:13px}.reader-tools select{min-height:44px;border:0;border-bottom:1px solid #b6a789;background:transparent;color:#413729;font:inherit}.reader-tools{gap:6px}.page-announcement{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}.turn-status{display:block;font-size:14px;color:#614c32}.turn-status:not(:empty){padding:6px 0}.gallery-intro{flex-wrap:wrap}.gallery-intro .section-picker{margin:0;flex:1 1 200px;justify-content:flex-end}.gallery-intro select{min-width:100px}.interview-profile{padding:12px 0 22px}.profile-role{font-size:14px;color:#715b3b}.interview-profile h3{font-size:22px;margin:8px 0}.interview-profile .profile-abstract{font-size:17px;line-height:1.9;margin:10px 0 16px}</style><main id="app"></main><script>
 const photos={"about": "photos/about.jpg", "cover": "photos/cover.jpg", "craft": "photos/craft.jpg", "gallery": "photos/gallery.jpg", "gallerytile": "photos/gallerytile.jpg", "progress": "photos/progress.jpg", "projects": "photos/projects.jpg", "signature": "photos/signature.jpg"};
 const chapters=['about','projects','craft'];
 const labels={about:'關於振美',projects:'建築作品',craft:'建築工藝',collection:'作品導覽',progress:'新案預告',gallery:'歷年作品'};
@@ -78,19 +78,55 @@ const bookPage=(id,n)=>pagesRoot+id+'-'+String(n).padStart(2,'0')+'.jpg';
 function reader(id,start=1){
  const [title,total,mb]=books[id];
  const options=Array.from({length:total},(_,i)=>'<option value="'+(i+1)+'"'+(i+1===start?' selected':'')+'>'+ (i+1)+' / '+total+'</option>').join('');
- return '<details class="reader" data-book="'+id+'" data-page="'+start+'"><summary>閱讀'+title+'電子書</summary><div class="reader-tools"><button type="button" data-step="-1" '+(start===1?'disabled':'')+'>上一頁</button><select aria-label="跳至電子書頁碼">'+options+'</select><output class="page-announcement" aria-live="polite">'+start+' / '+total+'</output><button type="button" data-step="1">下一頁</button></div><img loading="lazy" decoding="async" src="'+bookPage(id,start)+'" alt="'+title+'電子書，第 '+start+' 頁"><a href="'+bookRoot+id+'.pdf" target="_blank" rel="noopener">開啟完整 PDF（'+mb+' MB）</a></details>';
+ return '<details class="reader" data-book="'+id+'" data-page="'+start+'"><summary>閱讀'+title+'電子書</summary><div class="reader-tools"><button type="button" data-step="-1" '+(start===1?'disabled':'')+'>上一頁</button><select aria-label="跳至電子書頁碼">'+options+'</select><button type="button" data-step="1">下一頁</button></div><output class="turn-status" aria-live="polite"></output><img loading="lazy" decoding="async" src="'+bookPage(id,start)+'" alt="'+title+'電子書，第 '+start+' 頁"><a href="'+bookRoot+id+'.pdf" target="_blank" rel="noopener">開啟完整 PDF（'+mb+' MB）</a></details>';
 }
-function setBookPage(box,page){
- const id=box.dataset.book,[title,total]=books[id];
- const n=Math.max(1,Math.min(total,page));
- box.dataset.page=n;
- const img=box.querySelector('img');img.src=bookPage(id,n);img.alt=title+'電子書，第 '+n+' 頁';
- box.querySelector('output').textContent=n+' / '+total;box.querySelector('select').value=String(n);
- box.querySelector('[data-step="-1"]').disabled=n===1;box.querySelector('[data-step="1"]').disabled=n===total;
+const readerCache=new WeakMap();
+function pageImage(box,n){
+ let cache=readerCache.get(box);
+ if(!cache){cache=new Map();readerCache.set(box,cache)}
+ if(!cache.has(n)){
+   const image=new Image();
+   image.src=bookPage(box.dataset.book,n);
+   const ready=image.decode().then(()=>image).catch(error=>{cache.delete(n);throw error});
+   cache.set(n,ready);
+ }
+ return cache.get(n);
+}
+function prepareAdjacent(box,n){
+ const total=books[box.dataset.book][1],cache=readerCache.get(box);
+ if(cache)for(const key of cache.keys())if(Math.abs(key-n)>1)cache.delete(key);
+ if(box.open&&n<total)pageImage(box,n+1).catch(()=>{});
+}
+app.addEventListener('toggle',e=>{
+ const box=e.target;
+ if(box.matches('.reader')&&box.open)prepareAdjacent(box,Number(box.dataset.page));
+},true);
+async function setBookPage(box,page){
+ const id=box.dataset.book,[title,total]=books[id],n=Math.max(1,Math.min(total,page));
+ const status=box.querySelector('output'),select=box.querySelector('select');
+ const token=String(Number(box.dataset.turn||0)+1);box.dataset.turn=token;
+ select.value=String(n);status.textContent='正在載入第 '+n+' 頁…';
+ box.querySelector('[data-step="-1"]').disabled=n===1;
+ box.querySelector('[data-step="1"]').disabled=n===total;
+ try{
+   const img=await pageImage(box,n);
+   if(!box.isConnected||box.dataset.turn!==token)return;
+   img.alt=title+'電子書，第 '+n+' 頁';
+   box.querySelector('img').replaceWith(img);
+   box.dataset.page=n;status.textContent='';
+   prepareAdjacent(box,n);
+ }catch{
+   if(box.dataset.turn!==token)return;
+   const current=Number(box.dataset.page);
+   select.value=String(current);
+   box.querySelector('[data-step="-1"]').disabled=current===1;
+   box.querySelector('[data-step="1"]').disabled=current===total;
+   status.textContent='第 '+n+' 頁載入失敗，請再試一次。';
+ }
 }
 app.addEventListener('click',event=>{
  const button=event.target.closest('.reader button[data-step]');if(!button)return;
- const box=button.closest('.reader');setBookPage(box,Number(box.dataset.page)+Number(button.dataset.step));
+ const box=button.closest('.reader');setBookPage(box,Number(box.querySelector("select").value)+Number(button.dataset.step));
 });
 app.addEventListener('change',event=>{
  if(event.target.matches('.reader select'))setBookPage(event.target.closest('.reader'),Number(event.target.value));
@@ -134,7 +170,11 @@ window.addEventListener('scroll',()=>{if(renderedPage==='gallery'&&location.hash
 app.addEventListener('toggle',e=>{if(renderedPage==='gallery'&&e.target.matches('details')&&location.hash==='#gallery')rememberGallery()},true);
 sections.story[0][1]+=sheet('about','關於振美');
 sections.story.push(
- ['人物介紹', [['董事長',4],['總經理',1],['副總經理',14]].map(([role,n])=>'<h3>'+role+'</h3>'+archiveImage('src-character'+n,role+'肖像')+reader('interview',n===4?2:n===1?10:14)).join('')],
+ ['人物介紹', [
+ ['董事長','翁國振','從基層做起，農人本色的實踐','翁國振十三歲開始在高雄小港種田。農地被徵收後，他轉行與人合建，從工地基層做起，邊做邊學。訪談從這段經歷談起，回看他如何走進建築業。',4,2],
+ ['總經理','翁志賢','堅持1.5代的企業家','翁志賢原想出國念書，因家裡需要人手而回到公司。從早年兩戶透天厝的合建經驗，到親自參與經營，他用「1.5 代」形容自己和父親一起打拚的過程。',1,10],
+ ['副總經理及執行團隊','林易成','兄弟情誼，是合作的磐石','林易成加入後接手銷售與客戶服務。他在訪談裡談到與總經理的分工，也談為什麼要由熟悉作品的團隊親自向住戶介紹建築。',14,14]
+ ].map(([role,name,title,abstract,n,page])=>'<section class="interview-profile"><p class="profile-role">'+role+' · '+name+'</p><h3>'+title+'</h3><p class="profile-abstract">'+abstract+'</p>'+archiveImage('src-character'+n,name+'肖像')+reader('interview',page)+'</section>').join('')],
  ['合作夥伴',sheet('partners','設計團隊',[1,2,3,4,5])+'<h3>材料與設備</h3>'+sheet('partners','合作廠商',[8,9,10,11,12])],
  ['振美大事記',sheet('memorabilia','振美大事記',Array.from({length:12},(_,i)=>i+1))],
  ['聯絡振美',para('高雄市前鎮區中華五路 768 號')+sheet('contact','振美聯絡資訊')]
@@ -215,13 +255,8 @@ else if(i>=0){
  },{passive:true});
 }
 else if(sections[page]||page==='collection')app.innerHTML=bar+(sections[page]?photo(page==='story'?'about':'craft',labels[page],'section-photo'):'')+chapterContent(page);
-else if(page==='gallery')app.innerHTML=bar+'<div class="gallery-intro"><h1>歷年作品</h1><button type="button" class="action choose-work">選擇作品</button></div>'+photo('gallery','歷年作品手繪建築與年代紀錄','gallery')+'<article id="work-list"><h2 tabindex="-1">作品清單</h2>'+picker('選擇建案',[...galleryCases,'經典建案'])+galleryCases.map(galleryFold).join('')+'<details class="editorial-fold"><summary>經典建案</summary>'+sheet('classicworks','經典建案')+'</details>'+'</article>';
+else if(page==='gallery')app.innerHTML=bar+'<div class="gallery-intro"><h1>歷年作品</h1>'+ picker('選擇建案',[...galleryCases,'經典建案']) +'</div>'+photo('gallery','歷年作品手繪建築與年代紀錄','gallery')+'<article id="work-list"><h2 tabindex="-1">作品清單</h2>'+galleryCases.map(galleryFold).join('')+'<details class="editorial-fold"><summary>經典建案</summary>'+sheet('classicworks','經典建案')+'</details>'+'</article>';
 else app.innerHTML=bar+'<article class="project-note"><h1>沐居采</h1><p>新案預告，工程進度尚未公布。</p>'+archiveImage('new0','振美新案頁的 Coming Soon 預告')+'</article>';
-if(page==='gallery')app.querySelector('.choose-work').onclick=()=>{
- const heading=app.querySelector('#work-list h2');
- heading.focus({preventScroll:true});
- heading.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
-};
 const select=app.querySelector('.section-picker select');
 if(select)select.onchange=()=>{
  if(select.value==='')return;
